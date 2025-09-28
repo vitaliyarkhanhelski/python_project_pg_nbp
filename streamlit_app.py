@@ -5,7 +5,7 @@ NBP Exchange Rate Streamlit App
 Interactive web application for fetching and visualizing exchange rates
 from the Polish National Bank (NBP) API.
 
-Author: Vitaliy Arkhanhelskiy
+Author: Vitaliy Arkhanhelski
 Created: 2025-09-28
 """
 
