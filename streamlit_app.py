@@ -144,11 +144,11 @@ def create_exchange_rate_chart(data: Dict[str, float], data_type: str, currency:
     
     # Customize the plot based on data type
     if data_type == 'gold_price':
-        ax.set_title(f'Gold Price (PLN) - {dates[0].strftime("%B %Y")}', 
+        ax.set_title(f'Gold Price, PLN ({dates[0].strftime("%b %Y")} - {dates[-1].strftime("%b %Y")})', 
                      fontsize=14, fontweight='bold')
         ax.set_ylabel('Price (PLN)', fontsize=12)
     else:  # exchange_rate
-        ax.set_title(f'{currency} Exchange Rate (PLN) - {dates[0].strftime("%B %Y")}', 
+        ax.set_title(f'{currency} Exchange Rate, PLN ({dates[0].strftime("%b %Y")} - {dates[-1].strftime("%b %Y")})', 
                      fontsize=14, fontweight='bold')
         ax.set_ylabel('Exchange Rate (PLN)', fontsize=12)
     
