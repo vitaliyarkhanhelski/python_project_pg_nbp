@@ -29,6 +29,10 @@ def main():
     # Render sidebar controls
     UIRenderer.render_sidebar_header()
     currency = UIRenderer.render_currency_selection()
+    
+    # Apply dynamic background based on currency selection
+    CSSRenderer.apply_background(currency)
+    
     start_date_input, end_date_input = UIRenderer.render_date_range_section(currency)
     
     # Convert dates to string format

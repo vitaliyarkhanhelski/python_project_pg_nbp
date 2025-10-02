@@ -49,3 +49,23 @@ class CSSRenderer:
         }
         </style>
         """, unsafe_allow_html=True)
+    
+    @staticmethod
+    def apply_background(currency):
+        """Applies dynamic background based on selected currency.
+        
+        Args:
+            currency: The selected currency or asset (changes background for Gold)
+        """
+        from config import NBPConfig
+        
+        # Choose background gradient based on currency selection
+        background_gradient = "linear-gradient(to bottom, #ffffff, #faedaa)" if currency == NBPConfig.GOLD_ASSET else "linear-gradient(to bottom, #ffffff, #c2d6f0)"
+        
+        st.markdown(f"""
+        <style>
+        .stApp {{
+            background: {background_gradient} !important;
+        }}
+        </style>
+        """, unsafe_allow_html=True)
