@@ -16,94 +16,31 @@ class CSSRenderer:
         """Applies custom CSS styles to the Streamlit application."""
         st.markdown("""
         <style>
+        /* Main app background */
         .stApp {
             background: linear-gradient(to bottom, #ffffff, #c2d6f0);
         }
         
-        .sidebar .sidebar-content {
-            background: #d1884f !important;
-            border-radius: 15px;
-            margin: 1rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        
+        /* Sidebar styling */
         [data-testid="stSidebar"] {
             background: linear-gradient(to bottom, #2c3e50, #34495e);
-            color: #ecf0f1;
         }
         
+        /* Sidebar text - set all text to light color */
         [data-testid="stSidebar"] * {
             color: #ecf0f1 !important;
         }
         
-        [data-testid="stSidebar"] label {
-            color: #ecf0f1 !important;
-        }
-        
-        [data-testid="stSidebar"] .stSelectbox label,
-        [data-testid="stSidebar"] .stDateInput label {
-            color: #ecf0f1 !important;
-        }
-        
-        [data-testid="stSidebar"] .stMarkdown {
-            color: #ecf0f1 !important;
-        }
-        
-        [data-testid="stSidebar"] .stText {
-            color: #ecf0f1 !important;
-        }
-        
-        [data-testid="stSidebar"] div[data-testid="stSelectbox"] label,
-        [data-testid="stSidebar"] div[data-testid="stDateInput"] label {
-            color: #ecf0f1 !important;
-        }
-        
-        /* Fix input field text color - make it dark for readability */
-        [data-testid="stSidebar"] .stSelectbox > div > div > div {
+        /* Input fields - override with dark text for readability */
+        [data-testid="stSidebar"] input,
+        [data-testid="stSidebar"] .stSelectbox > div > div > div,
+        [data-testid="stSidebar"] .stDateInput > div > div > div,
+        [data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] *,
+        [data-testid="stSidebar"] .stDateInput [data-baseweb="select"] * {
             color: #2c3e50 !important;
         }
         
-        [data-testid="stSidebar"] .stDateInput > div > div > div {
-            color: #2c3e50 !important;
-        }
-        
-        [data-testid="stSidebar"] input {
-            color: #2c3e50 !important;
-        }
-        
-        [data-testid="stSidebar"] .stSelectbox input {
-            color: #2c3e50 !important;
-        }
-        
-        [data-testid="stSidebar"] .stDateInput input {
-            color: #2c3e50 !important;
-        }
-        
-        /* Additional selectbox text targeting */
-        [data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] {
-            color: #2c3e50 !important;
-        }
-        
-        [data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] div {
-            color: #2c3e50 !important;
-        }
-        
-        [data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] span {
-            color: #2c3e50 !important;
-        }
-        
-        [data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] {
-            color: #2c3e50 !important;
-        }
-        
-        [data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] div {
-            color: #2c3e50 !important;
-        }
-        
-        [data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] span {
-            color: #2c3e50 !important;
-        }
-        
+        /* Main content area styling */
         .main .block-container {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
