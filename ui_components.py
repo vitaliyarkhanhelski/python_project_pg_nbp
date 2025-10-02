@@ -43,16 +43,21 @@ class UIRenderer:
         )
     
     @staticmethod
-    def render_date_range_section():
-        """Renders the date range selection section and returns the selected dates."""
+    def render_date_range_section(currency):
+        """Renders the date range selection section and returns the selected dates.
+        
+        Args:
+            currency: The selected currency or asset (e.g., 'USD', 'EUR', 'Gold')
+        """
         st.sidebar.subheader("Date Range")
         
-        # Set default to last 30 days, but allow going back to 2002
+        # Set default to last 30 days
         end_date = datetime.now()
         start_date = end_date - timedelta(days=30)
         
-        # Set minimum date to 2002 (when NBP data starts)
-        min_date = datetime(NBPConfig.MIN_DATE_YEAR, 1, 1)
+        # Set minimum date based on asset type (Gold: 2013, Currencies: 2002)
+        year = NBPConfig.MIN_DATE_YEAR_GOLD if currency == NBPConfig.GOLD_ASSET else NBPConfig.MIN_DATE_YEAR_CURRENCIES
+        min_date = datetime(year, 1, 2)
         
         col1, col2 = st.sidebar.columns(2)
         with col1:

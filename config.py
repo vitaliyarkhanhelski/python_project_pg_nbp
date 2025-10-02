@@ -21,7 +21,8 @@ class NBPConfig:
     
     # Date Range Limits
     MAX_DATE_RANGE_DAYS = 367
-    MIN_DATE_YEAR = 2002
+    MIN_DATE_YEAR_CURRENCIES = 2002  # Currency exchange rates start from Jan 2, 2002
+    MIN_DATE_YEAR_GOLD = 2013  # Gold prices start from Jan 2, 2013
     
     # Supported Currencies
     SUPPORTED_CURRENCIES = ["USD", "EUR", "CHF", "GBP"]
@@ -40,7 +41,8 @@ class NBPConfig:
     """
     API_LIMITS = f"""
     - Maximum date range: **{MAX_DATE_RANGE_DAYS} days**
-    - Data available from {MIN_DATE_YEAR}
+    - Currency data from **{MIN_DATE_YEAR_CURRENCIES}**
+    - Gold data from **{MIN_DATE_YEAR_GOLD}**
     - Weekends and holidays excluded
     """
     

@@ -29,7 +29,7 @@ def main():
     # Render sidebar controls
     UIRenderer.render_sidebar_header()
     currency = UIRenderer.render_currency_selection()
-    start_date_input, end_date_input = UIRenderer.render_date_range_section()
+    start_date_input, end_date_input = UIRenderer.render_date_range_section(currency)
     
     # Convert dates to string format
     start_date_str = start_date_input.strftime('%Y-%m-%d')
