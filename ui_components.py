@@ -6,7 +6,8 @@ This module contains UI component classes for the NBP Streamlit application.
 """
 
 import streamlit as st
-from datetime import datetime, timedelta
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from config import NBPConfig
 
 
@@ -51,9 +52,9 @@ class UIRenderer:
         """
         st.sidebar.subheader("Date Range")
         
-        # Set default to last 30 days
+        # Set default to last 1 year (accounts for leap years)
         end_date = datetime.now()
-        start_date = end_date - timedelta(days=30)
+        start_date = end_date - relativedelta(years=1)
         
         # Set minimum date based on asset type (Gold: 2013, Currencies: 2002)
         year = NBPConfig.MIN_DATE_YEAR_GOLD if currency == NBPConfig.GOLD_ASSET else NBPConfig.MIN_DATE_YEAR_CURRENCIES
