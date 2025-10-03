@@ -81,20 +81,22 @@ class UIRenderer:
                 "Start Date",
                 value=st.session_state.start_date,
                 min_value=min_date,
-                max_value=st.session_state.end_date,
+                max_value=datetime.now(),
                 key="start_date_widget"
             )
+            # Update session state with current values
+            st.session_state.start_date = start_date_input
+            if st.session_state.end_date < st.session_state.start_date:
+                st.session_state.end_date = st.session_state.start_date
         with col2:
             end_date_input = st.date_input(
                 "End Date",
                 value=st.session_state.end_date,
-                min_value=min_date,
+                min_value=st.session_state.start_date,
                 max_value=datetime.now(),
                 key="end_date_widget"
             )
-        
         # Update session state with current values
-        st.session_state.start_date = start_date_input
         st.session_state.end_date = end_date_input
         
         return start_date_input, end_date_input
