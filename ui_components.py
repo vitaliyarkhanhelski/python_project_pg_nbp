@@ -6,6 +6,7 @@ This module contains UI component classes for the NBP Streamlit application.
 """
 
 import streamlit as st
+import pandas as pd
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from config import NBPConfig
@@ -24,10 +25,14 @@ class UIRenderer:
         )
     
     @staticmethod
-    def render_header():
-        """Renders the main page header with title and description."""
-        st.title(NBPConfig.MAIN_TITLE)
-        st.markdown(NBPConfig.MAIN_DESCRIPTION)
+    def render_header(currency=None):
+        """Renders the main page header with title and description.
+        
+        Args:
+            currency: The selected currency or asset (changes title and description for Gold)
+        """
+        st.title(NBPConfig.get_main_title(currency))
+        st.markdown(NBPConfig.get_main_description(currency))
     
     @staticmethod
     def render_sidebar_header():
@@ -52,29 +57,45 @@ class UIRenderer:
         """
         st.sidebar.subheader("Date Range")
         
-        # Set default to last 1 year (accounts for leap years)
-        end_date = datetime.now()
-        start_date = end_date - relativedelta(years=1)
+        # Initialize default dates in session state if not present
+        if 'start_date' not in st.session_state:
+            st.session_state.start_date = (datetime.now() - relativedelta(years=1)).date()
+        if 'end_date' not in st.session_state:
+            st.session_state.end_date = datetime.now().date()
         
         # Set minimum date based on asset type (Gold: 2013, Currencies: 2002)
         year = NBPConfig.MIN_DATE_YEAR_GOLD if currency == NBPConfig.GOLD_ASSET else NBPConfig.MIN_DATE_YEAR_CURRENCIES
-        min_date = datetime(year, 1, 2)
+        min_date = datetime(year, 1, 2).date()  # Convert to date object for compatibility
+        
+        # Adjust dates if they're outside the valid range for the selected currency
+        if st.session_state.start_date < min_date:
+            st.session_state.start_date = min_date
+        if st.session_state.end_date < min_date:
+            # Set end_date to min_date + 1 year to avoid 0-day range
+            end_datetime = datetime.combine(min_date, datetime.min.time()) + relativedelta(years=1)
+            st.session_state.end_date = end_datetime.date()
         
         col1, col2 = st.sidebar.columns(2)
         with col1:
             start_date_input = st.date_input(
                 "Start Date",
-                value=start_date,
+                value=st.session_state.start_date,
                 min_value=min_date,
-                max_value=end_date
+                max_value=st.session_state.end_date,
+                key="start_date_widget"
             )
         with col2:
             end_date_input = st.date_input(
                 "End Date",
-                value=end_date,
+                value=st.session_state.end_date,
                 min_value=min_date,
-                max_value=datetime.now()
+                max_value=datetime.now(),
+                key="end_date_widget"
             )
+        
+        # Update session state with current values
+        st.session_state.start_date = start_date_input
+        st.session_state.end_date = end_date_input
         
         return start_date_input, end_date_input
     
@@ -124,6 +145,28 @@ class UIRenderer:
         with col4:
             avg_value = sum(data.values()) / len(data)
             st.metric("Avg Value", f"{avg_value:.4f} PLN")
+    
+    @staticmethod
+    def render_data_table(data, data_label, value_label):
+        """Renders the data table with fetched rates/prices.
+        
+        Args:
+            data: Dictionary with date as key and rate/price as value
+            data_label: Label for the data type (e.g., "USD Exchange Rates", "Gold Prices")
+            value_label: Label for the value column (e.g., "Rate (PLN)", "Price (PLN)")
+        """
+        st.subheader(f"📈 {data_label} Data")
+        
+        # Create a DataFrame for better display
+        df = pd.DataFrame([
+            {"Date": date, value_label: f"{rate:.4f}"}
+            for date, rate in data.items()
+        ])
+        
+        # Reset index to start from 1 instead of 0
+        df.index = df.index + 1
+        
+        st.dataframe(df, use_container_width=True)
     
     @staticmethod
     def render_error_message(currency):

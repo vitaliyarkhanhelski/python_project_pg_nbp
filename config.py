@@ -30,8 +30,6 @@ class NBPConfig:
     
     # UI Messages
     PAGE_TITLE = "NBP Exchange Rates"
-    MAIN_TITLE = "💰 NBP Exchange Rates Dashboard"
-    MAIN_DESCRIPTION = "Fetch and visualize exchange rates from the Polish National Bank (NBP) API"
     FOOTER_MESSAGE = f"Data source: [NBP API]({API_BASE_URL})"
     SIDEBAR_INSTRUCTIONS = f"""
     1. Select a currency ({', '.join(SUPPORTED_CURRENCIES)}) or {GOLD_ASSET}
@@ -45,4 +43,28 @@ class NBPConfig:
     - Gold data from **{MIN_DATE_YEAR_GOLD}**
     - Weekends and holidays excluded
     """
+    
+    @classmethod
+    def get_main_title(cls, currency):
+        """Returns the appropriate main title based on currency selection.
+        
+        Args:
+            currency: The selected currency or asset (e.g., 'USD', 'EUR', 'Gold')
+            
+        Returns:
+            str: Title for the main header
+        """
+        return f"💰 NBP {'Gold Prices' if currency == cls.GOLD_ASSET else 'Exchange Rates'} Dashboard"
+    
+    @classmethod
+    def get_main_description(cls, currency):
+        """Returns the appropriate main description based on currency selection.
+        
+        Args:
+            currency: The selected currency or asset (e.g., 'USD', 'EUR', 'Gold')
+            
+        Returns:
+            str: Description message for the main header
+        """
+        return f"Fetch and visualize {'gold prices' if currency == cls.GOLD_ASSET else 'exchange rates'} from the Polish National Bank (NBP) API"
     

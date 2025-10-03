@@ -10,7 +10,6 @@ Created: 2025-09-28
 """
 
 import streamlit as st
-import pandas as pd
 from nbp_api_client import fetch_gold_prices, fetch_exchange_rates
 from config import NBPConfig
 from chart_utils import ChartRenderer
@@ -20,15 +19,21 @@ from ui_components import UIRenderer
 
 def main():
     # Setup page configuration and styling
+    # Initialize session state for auto-fetch behavior
+    if 'fetch' not in st.session_state:
+        st.session_state.fetch = False
+    if 'prev_dates' not in st.session_state:
+        st.session_state.prev_dates = None
+
     UIRenderer.setup_page()
     CSSRenderer.apply_custom_styles()
-    
-    # Render main page header
-    UIRenderer.render_header()
     
     # Render sidebar controls
     UIRenderer.render_sidebar_header()
     currency = UIRenderer.render_currency_selection()
+    
+    # Render main page header with dynamic description
+    UIRenderer.render_header(currency)
     
     # Apply dynamic background based on currency selection
     CSSRenderer.apply_background(currency)
@@ -45,8 +50,21 @@ def main():
     # Validate date range and render validation messages
     is_valid_range = UIRenderer.render_date_validation(date_range_days)
     
-    # Render fetch button and handle data fetching
-    if UIRenderer.render_fetch_button() and is_valid_range:
+    # Check if dates have changed
+    current_dates = (start_date_str, end_date_str)
+    if st.session_state.prev_dates is not None and st.session_state.prev_dates != current_dates:
+        st.session_state.fetch = False
+    
+    # Render fetch button
+    fetch_button_clicked = UIRenderer.render_fetch_button()
+    
+    # Set flag on button click
+    if fetch_button_clicked:
+        st.session_state.fetch = True
+        st.session_state.prev_dates = current_dates
+    
+    # Fetch data if: button was clicked OR flag is True (auto-fetch after first time)
+    if (fetch_button_clicked or st.session_state.fetch) and is_valid_range:
         if currency == NBPConfig.GOLD_ASSET:
             with st.spinner(f"Fetching gold prices..."):
                 data = fetch_gold_prices(start_date_str, end_date_str)
@@ -64,18 +82,7 @@ def main():
             st.success(f"Successfully fetched {len(data)} {data_label.lower()} records!")
             
             # Display data in a table
-            st.subheader(f"📈 {data_label} Data")
-            
-            # Create a DataFrame for better display
-            df = pd.DataFrame([
-                {"Date": date, value_label: f"{rate:.4f}"}
-                for date, rate in data.items()
-            ])
-            
-            # Reset index to start from 1 instead of 0
-            df.index = df.index + 1
-            
-            st.dataframe(df, use_container_width=True)
+            UIRenderer.render_data_table(data, data_label, value_label)
 
             # Display statistics
             UIRenderer.render_statistics(data)
